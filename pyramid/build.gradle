@@ -15,7 +15,15 @@ android {
             abiFilters "armeabi-v7a"
         }
         python {
-            buildPython("D:/Programs/Python/Python38/python.exe")
+            // 优先使用 -PbuildPython 传入的路径，如果没有则使用环境变量
+            if (project.hasProperty('buildPython')) {
+                buildPython(project.property('buildPython'))
+            } else if (System.getenv("CHAQUOPY_BUILD_PYTHON") != null) {
+                buildPython(System.getenv("CHAQUOPY_BUILD_PYTHON"))
+            } else {
+                // 默认值，可选
+                buildPython("python3")
+            }
             pip {
                 install "lxml"
                 install "ujson"
